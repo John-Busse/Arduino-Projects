@@ -30,23 +30,23 @@ int colorRed[] = { HIGH, HIGH, LOW };
 int colorGreen[] = { LOW, HIGH, HIGH };
 
 //Speaker
-#define SPEAKER 2
+#define SPEAKER 9
 #define NOTE_B5 988
 #define NOTE_C6 1047
 
 int melody[] = {NOTE_B5, NOTE_B5, NOTE_C6};
 
 //Button
-#define BUTTON 3
+#define BUTTON 10
 
 //4-Digit 7-segment number display
-#define NUMLATCH 5
-#define NUMCLOCK 6
-#define NUMDATA 4
+#define NUMLATCH 12
+#define NUMCLOCK 13
+#define NUMDATA 11
 unsigned int dataPins[4] = {27, 26, 25, 24};
 
 // LCD Screen
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+LiquidCrystal lcd(8, 7, 6, 5, 4, 3);
 
 void setup()
 {
@@ -91,7 +91,7 @@ void Display(int digit, unsigned char num)
 {
   digitalWrite(NUMLATCH, LOW);
   //the id==2 check lights up the center decimal point (would be the : on a clock)
-  shiftOut(NUMDATA, NUMCLOCK, MSBFIRST, numTable[num] + (digit == 2 ? 0x80 : 0)); 
+  shiftOut(NUMDATA, NUMCLOCK, MSBFIRST, numTable[num]);// + (digit == 2 ? 0x80 : 0)); 
   digitalWrite(NUMLATCH, HIGH);
   for (int i = 0; i < 4; i++) digitalWrite(dataPins[i], HIGH);
   digitalWrite(dataPins[digit], LOW);
@@ -112,9 +112,9 @@ void loop() {
     {
       digitalWrite(RED, colorRed[i]);
       digitalWrite(GREEN, colorGreen[i]);
-      tone(SPEAKER, melody[i], 250);
+      tone(SPEAKER, melody[i], 500);
 
-      delay(500);
+      delay(1000);
     }
     countdown = false;
     startTime = millis();
