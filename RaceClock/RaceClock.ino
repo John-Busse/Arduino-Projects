@@ -71,7 +71,7 @@ void setup()
 }
 
 //4-digit 7-segment display
-unsigned int lapTime = 0, fastestLap = ULONG_MAX;
+unsigned long int lapTime = 0, fastestLap = ULONG_MAX;
 unsigned short digitData[4] = {0};
 
 //each char is a bitmask for the 7-segment digits 0-9
@@ -82,7 +82,7 @@ unsigned char numTable[]=
 bool buttonPressed = false;
 
 //race time variables
-unsigned long startTime = 0, currentTime = 0, prevUpdate = 0, updateTime = 1000;
+unsigned long startTime = 0, currentTime = 0, prevUpdate = 0;
 
 bool countdown = true;
 
