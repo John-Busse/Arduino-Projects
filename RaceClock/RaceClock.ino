@@ -31,10 +31,10 @@ int colorGreen[] = { LOW, HIGH, HIGH };
 
 //Speaker
 #define SPEAKER 9
-#define NOTE_B5 988
-#define NOTE_C6 1047
+#define NOTE_D3 147
+#define NOTE_G3 196
 
-int melody[] = {NOTE_B5, NOTE_B5, NOTE_C6};
+int melody[] = {NOTE_D3, NOTE_D3, NOTE_G3};
 
 //Button
 #define BUTTON 10
