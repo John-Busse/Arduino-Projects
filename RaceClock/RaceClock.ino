@@ -83,6 +83,7 @@ bool buttonPressed = false;
 
 //race time variables
 unsigned long startTime = 0, currentTime = 0, prevUpdate = 0;
+const unsigned long updateTime = 10;
 
 bool countdown = true;
 
@@ -91,7 +92,7 @@ void Display(int digit, unsigned char num)
 {
   digitalWrite(NUMLATCH, LOW);
   //the id==2 check lights up the center decimal point (would be the : on a clock)
-  shiftOut(NUMDATA, NUMCLOCK, MSBFIRST, numTable[num]);// + (digit == 2 ? 0x80 : 0)); 
+  shiftOut(NUMDATA, NUMCLOCK, MSBFIRST, numTable[num] + (digit == 2 ? 0x80 : 0)); 
   digitalWrite(NUMLATCH, HIGH);
   for (int i = 0; i < 4; i++) digitalWrite(dataPins[i], HIGH);
   digitalWrite(dataPins[digit], LOW);
@@ -133,8 +134,23 @@ void loop() {
       {
         fastestLap = currentTime;
         //updateLCD with new Fastest Lap
-        lcd.setCursor(0, 1);
-        lcd.print(fastestLap / 1000);
+        if (fastestLap >= 60000) // if the fastest lap is above one minute, display in minutes and seconds
+        {
+          int minutes = fastestLap / 60000;
+          float lapSeconds = (fastestLap % 60000) / 1000.0f;
+
+          lcd.setCursor(0, 1);
+          String timeStr = String(minutes) + ":" + String(lapSeconds, 2) + " m";
+          lcd.print(timeStr);
+        }
+        else  //fastest lap in seconds only
+        {
+          float lapF = fastestLap / 1000.0f;
+
+          lcd.setCursor(0, 1);
+          String timeStr = String(lapF, 2) + " s";
+          lcd.print(timeStr);
+        }
       }
     }
     //if the button is released (after pressing it)
@@ -151,12 +167,31 @@ void loop() {
     {
       prevUpdate = currentTime;
       //lapTime is current time in seconds
-      lapTime = currentTime / 1000;
-      if (lapTime >= 10000) lapTime -= 10000; //prevent counter overflow
-      //populate the digit display
-      for (int i = 0; i < 4; i++) {
-        digitData[i] = lapTime % 10;
-        lapTime /= 10;
+      if (currentTime > 60000)  //current time > one minute
+      {
+        lapTime = currentTime / 1000; //convert to seconds
+        int minutes = lapTime / 60; //seconds to minutes
+        int seconds = lapTime % 60; //remainder to seconds
+        for (int i = 0; i < 2; i++)
+        {
+          digitData[i] = seconds % 10;
+          seconds /= 10;
+        }
+        for (int i = 2; i < 4; i++)
+        {
+          digitData[i] = minutes % 10;
+          minutes /= 10;
+        }
+      }
+      else  // less than one minute
+      {
+        lapTime = currentTime / 10;
+        if (lapTime >= 10000) lapTime -= 10000; //prevent counter overflow
+        //populate the digit display
+        for (int i = 0; i < 4; i++) {
+          digitData[i] = lapTime % 10;
+          lapTime /= 10;
+        }
       }
     }
   }
