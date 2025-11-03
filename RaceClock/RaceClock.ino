@@ -140,7 +140,7 @@ void loop() {
           float lapSeconds = (fastestLap % 60000) / 1000.0f;
 
           lcd.setCursor(0, 1);
-          String timeStr = String(minutes) + ":" + String(lapSeconds, 2) + " m";
+          String timeStr = String(minutes) + ":" + (lapSeconds < 10.0f ? "0" : "") + String(lapSeconds, 2) + " m";
           lcd.print(timeStr);
         }
         else  //fastest lap in seconds only
