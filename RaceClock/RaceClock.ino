@@ -133,13 +133,16 @@ void loop() {
       if (currentTime < fastestLap)
       {
         fastestLap = currentTime;
+        lcd.setCursor(0, 1);
+        lcd.print("                ");  // clear the second line
+        lcd.setCursor(0, 1);
+        
         //updateLCD with new Fastest Lap
         if (fastestLap >= 60000) // if the fastest lap is above one minute, display in minutes and seconds
         {
           int minutes = fastestLap / 60000;
           float lapSeconds = (fastestLap % 60000) / 1000.0f;
 
-          lcd.setCursor(0, 1);
           String timeStr = String(minutes) + ":" + (lapSeconds < 10.0f ? "0" : "") + String(lapSeconds, 2) + " m";
           lcd.print(timeStr);
         }
@@ -147,7 +150,6 @@ void loop() {
         {
           float lapF = fastestLap / 1000.0f;
 
-          lcd.setCursor(0, 1);
           String timeStr = String(lapF, 2) + " s";
           lcd.print(timeStr);
         }
